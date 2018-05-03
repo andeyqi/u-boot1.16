@@ -233,7 +233,7 @@ static __inline__ int abortboot(int bootdelay)
 #ifdef CONFIG_MENUPROMPT
 	printf(CONFIG_MENUPROMPT, bootdelay);
 #else
-	printf("Hit any key to stop autoboot: %2d ", bootdelay);
+	printf("Hit any key to stop autoboot: %2d ", bootdelay);/*  */
 #endif
 
 #if defined CONFIG_ZERO_BOOTDELAY_CHECK
@@ -440,7 +440,7 @@ void main_loop (void)
 
 # ifndef CFG_HUSH_PARSER
         {
-            printf("Booting Linux ...\n");            
+            printf("Booting Linux ...\n");/* 无按键按下时，等待bootdelay后启动内核*/
     	    run_command (s, 0);
         }
 # else
@@ -455,7 +455,8 @@ void main_loop (void)
 
 # ifdef CONFIG_MENUKEY
 	if (menukey == CONFIG_MENUKEY) {
-	    s = getenv("menucmd");
+	    s = getenv("menucmd");/* 有按键按下，执行 */
+		puts(s);
 	    if (s) {
 # ifndef CFG_HUSH_PARSER
 		run_command (s, 0);
@@ -474,8 +475,9 @@ void main_loop (void)
 	    video_banner();
 	}
 #endif
-
-    run_command("menu", 0);
+	printf("before do_menu\n");
+    run_command("menu", 0);/* 有按键按下时，执行do_menu函数 */
+	printf("after do_menu\n");
 	/*
 	 * Main Loop for Monitor Command Processing
 	 */

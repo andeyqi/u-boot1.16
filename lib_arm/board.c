@@ -266,6 +266,7 @@ void start_armboot (void)
 
 #ifndef CFG_NO_FLASH
 	/* configure available FLASH banks */
+	printf("use flash\n");
 	size = flash_init ();
 	display_flash_config (size);
 #endif /* CFG_NO_FLASH */

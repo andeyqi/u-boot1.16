@@ -79,8 +79,8 @@ int board_init (void)
 
 int dram_init (void)
 {
-    gd->bd->bi_dram[0].start = PHYS_SDRAM_1;
-    gd->bd->bi_dram[0].size = PHYS_SDRAM_1_SIZE;
+    gd->bd->bi_dram[0].start = PHYS_SDRAM_1;/* 0x3000 0000 SDRAM起始地址 */
+    gd->bd->bi_dram[0].size = PHYS_SDRAM_1_SIZE; /* SDRAM 大小64M 0X400000 */
 
     return 0;
 }
