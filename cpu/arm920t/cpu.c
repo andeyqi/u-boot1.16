@@ -93,6 +93,17 @@ int cpu_init (void)
 	/*
 	 * setup up stacks if necessary
 	 */
+	 /*-----------------------------------------------------------------------
+ * Physical Memory Map
+ */
+	// #define CONFIG_NR_DRAM_BANKS	1	   /* we have 1 bank of DRAM */
+	// #define PHYS_SDRAM_1		0x30000000 /* SDRAM Bank #1 */
+	// #define PHYS_SDRAM_1_SIZE	0x04000000 /* 64 MB */
+
+	// #define PHYS_FLASH_1		0x00000000 /* Flash Bank #1 */
+
+	// #define CFG_FLASH_BASE		PHYS_FLASH_1
+	/* 物理内存的相应值，配置在s3c2410.h中配置 */
 #ifdef CONFIG_USE_IRQ
 	IRQ_STACK_START = _armboot_start - CFG_MALLOC_LEN - CFG_GBL_DATA_SIZE - 4;
 	FIQ_STACK_START = IRQ_STACK_START - CONFIG_STACKSIZE_IRQ;
