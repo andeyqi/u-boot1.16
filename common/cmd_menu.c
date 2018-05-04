@@ -170,7 +170,7 @@ void menu_shell(void)
     while (1)
     {
         main_menu_usage();
-        c = awaitkey(-1, NULL);
+        c = awaitkey(-1, NULL);/* 阻塞等待用户输入命令 */
         printf("%c\n", c);
         switch (c)
         {

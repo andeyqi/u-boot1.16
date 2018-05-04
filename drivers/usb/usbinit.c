@@ -58,6 +58,7 @@ char awaitkey(unsigned long delay, int* error_p)
 
     if (delay == -1) {
         while (1) {
+			/* check console device is exsit */
             if (tstc()) /* we got a key press	*/
                 return getc();
         }

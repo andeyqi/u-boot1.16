@@ -125,7 +125,7 @@ static int init_baudrate (void)
 	int i = getenv_r ("baudrate", tmp, sizeof (tmp));
 	gd->bd->bi_baudrate = gd->baudrate = (i > 0)
 			? (int) simple_strtoul (tmp, NULL, 10)
-			: CONFIG_BAUDRATE;
+			: CONFIG_BAUDRATE;/* 未设置波特率，设定波特率为115200 */
 
 	return (0);
 }
@@ -221,8 +221,8 @@ init_fnc_t *init_sequence[] = {
 	board_init,		/* basic board dependent setup */
 	interrupt_init,		/* set up exceptions */
 	env_init,		/* initialize environment */
-	init_baudrate,		/* initialze baudrate settings */
-	serial_init,		/* serial communications setup */
+	init_baudrate,		/* initialze baudrate settings *//* a设定串口的波特率 */
+	serial_init,		/* serial communications setup *//* 初始化串口，根据设定的波特率设置串口 */
 	console_init_f,		/* stage 1 init of console */
 	display_banner,		/* say that we are here */
 #if defined(CONFIG_DISPLAY_CPUINFO)
@@ -348,7 +348,7 @@ void start_armboot (void)
 		}
 #endif
 	}
-
+	/* 初始化硬件设备，串口 */
 	devices_init ();	/* get the devices list going. */
 
 #ifdef CONFIG_CMC_PU2

@@ -1104,6 +1104,10 @@ static char * delete_char (char *buffer, char *p, int *colp, int *np, int plen)
 
 /****************************************************************************/
 
+/* 解析控制台传入的参数,解析成 argc, argv 的形式
+ *此函数会修改line内的数据，argv数组成员指向line的地址
+*/
+
 int parse_line (char *line, char *argv[])
 {
 	int nargs = 0;

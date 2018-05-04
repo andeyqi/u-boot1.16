@@ -67,7 +67,8 @@ int nulldev_input(void)
  * SYSTEM DRIVERS
  **************************************************************************
  */
-
+/* 设置标准输入输出错误输出，对应的硬件操作函数 */
+/* 在每个CPU目录下会实现相应的出操作函数 */
 static void drv_system_init (void)
 {
 	device_t dev;
