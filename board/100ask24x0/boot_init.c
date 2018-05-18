@@ -45,10 +45,10 @@ static unsigned char s3c2440_read_data(void);
 /* 复位 */
 static void s3c2410_nand_reset(void)
 {
-    s3c2410_nand_select_chip();
-    s3c2410_write_cmd(0xff);  // 复位命令
-    s3c2410_wait_idle();
-    s3c2410_nand_deselect_chip();
+    s3c2410_nand_select_chip();  //片选
+    s3c2410_write_cmd(0xff);     //复位命令
+    s3c2410_wait_idle();         //等待复位完完成
+    s3c2410_nand_deselect_chip();//取消片选
 }
 
 /* 等待NAND Flash就绪 */
@@ -57,9 +57,9 @@ static void s3c2410_wait_idle(void)
     int i;
 	S3C2410_NAND * s3c2410nand = (S3C2410_NAND *)0x4e000000;
 	
-    volatile unsigned char *p = (volatile unsigned char *)&s3c2410nand->NFSTAT;
-    while(!(*p & BUSY))
-        for(i=0; i<10; i++);
+    volatile unsigned char *p = (volatile unsigned char *)&s3c2410nand->NFSTAT;/* 读取nand flash 状态寄存器的值 */
+    while(!(*p & BUSY)) /* 一直等待直至非busy状态 */
+        for(i=0; i<10; i++); /* 延时会让nand 完成reset */
 }
 
 /* 发出片选信号 */
@@ -68,7 +68,7 @@ static void s3c2410_nand_select_chip(void)
     int i;
 	S3C2410_NAND * s3c2410nand = (S3C2410_NAND *)0x4e000000;
 
-    s3c2410nand->NFCONF &= ~(1<<11);
+    s3c2410nand->NFCONF &= ~(1<<11);/* NFCONF寄存器的bit11位,清零发出片选 */
     for(i=0; i<10; i++);    
 }
 
@@ -77,7 +77,7 @@ static void s3c2410_nand_deselect_chip(void)
 {
 	S3C2410_NAND * s3c2410nand = (S3C2410_NAND *)0x4e000000;
 
-    s3c2410nand->NFCONF |= (1<<11);
+    s3c2410nand->NFCONF |= (1<<11);/* NFCONF寄存器的bit11位置1，取消片选 */
 }
 
 /* 发出命令 */
@@ -141,9 +141,15 @@ static void s3c2440_wait_idle(void)
 static void s3c2440_nand_select_chip(void)
 {
     int i;
+	
+	/* NAND Flash Memory nFCE signal control
+	0: Force nFCE to low (Enable chip select)
+	1: Force nFCE to high (Disable chip select)
+	Note: During boot time, it is controlled automatically.
+	This value is only valid while MODE bit is 1 */
 	S3C2440_NAND * s3c2440nand = (S3C2440_NAND *)0x4e000000;
 
-    s3c2440nand->NFCONT &= ~(1<<1);
+    s3c2440nand->NFCONT &= ~(1<<1);/* 设为0 Enable chip select */
     for(i=0; i<10; i++);    
 }
 
@@ -152,7 +158,7 @@ static void s3c2440_nand_deselect_chip(void)
 {
 	S3C2440_NAND * s3c2440nand = (S3C2440_NAND *)0x4e000000;
 
-    s3c2440nand->NFCONT |= (1<<1);
+    s3c2440nand->NFCONT |= (1<<1); /* 设为1 Disable chip select */
 }
 
 /* 发出命令 */
@@ -418,6 +424,8 @@ void nand_read_ll_lp(unsigned char *buf, unsigned long start_addr, int size)
     
     return ;
 }
+
+/* 利用NAND和NOR的启动0地址是否为可读可写的特性来区分,启动位置 */
 
 int bBootFrmNORFlash(void)
 {
